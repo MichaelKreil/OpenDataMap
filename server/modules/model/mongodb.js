@@ -7,19 +7,18 @@ exports.DB = function (config) {
 	var db = mongojs(config.dbname);
 
 	log.debug('Starting');
-/*
-	db_connector.open(function (err, newDb) {
-		log.error(err);
-		log.debug('Started');
-		db = newDb;
-	});
 
-	me.stop = function () {
-		log.debug('Stopping');
-		db.close();
-		log.debug('Stopped');
+	me.listAll = function (collectionName) {
+		var collection = db.collection(collectionName);
+		return collection.find();
 	}
 
-*/
+	me.update = function (collectionName, entry) {
+		entry.time = (new Date()).getTime();
+		entry.state = 'new';
+		var collection = db.collection(collectionName);
+		collection.insert(entry);
+	}
+
 	return me;
 }
