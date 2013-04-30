@@ -1,0 +1,3 @@
+odm.model = new (function () {
+	
+})();
