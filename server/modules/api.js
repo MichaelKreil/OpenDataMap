@@ -1,7 +1,13 @@
 exports.Api = function (model) {
 	var me = this;
+	var log = new (require('./log.js').Log)('API');
 
 	me.get = function (path, callback) {
+		var acceptedOnly = true;
+		if (path[1] == 'new') {
+			log.debug('requesting also new entries');
+			acceptedOnly = false;
+		}
 		switch (path[0]) {
 			case 'topics':
 				log.debug('requesting topics');
