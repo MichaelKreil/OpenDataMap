@@ -16,18 +16,14 @@ exports.DB = function (config) {
 
 	log.debug('Starting');
 
-	me.listAll = function (collectionName, callback) {
+	me.list = function (collectionName, callback, all) {
 		var collection = db.collection(collectionName);
-		log.debug('listAll');
-		collection.find(function (err, docs) {
-			callback(condense(docs));
-		});
-	}
+		log.debug('list');
+		
+		var query = {state:'accepted'};
+		if (all) query = {};
 
-	me.listAccepted = function (collectionName, callback) {
-		var collection = db.collection(collectionName);
-		log.debug('listAccepted');
-		collection.find({state:'accepted'}, function (err, docs) {
+		collection.find(query, function (err, docs) {
 			callback(condense(docs));
 		});
 	}

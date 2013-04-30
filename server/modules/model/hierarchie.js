@@ -6,9 +6,9 @@ exports.Hierarchie = function (options) {
 
 	me.getAll = function (acceptedOnly, callback) {
 		if (acceptedOnly) {
-			db.listAccepted(collectionName, callback);
+			db.list(collectionName, callback);
 		} else {
-			db.listAll(collectionName, callback);
+			db.list(collectionName, callback, true);
 		}
 	}
 
