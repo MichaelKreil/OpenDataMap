@@ -2,9 +2,9 @@ var fs = require('fs');
 
 var config = JSON.parse(fs.readFileSync('../config/config.json'));
 
-var server   = new require('./modules/server.js').Server(config.server);
 var model    = new require('./modules/model/model.js').Model(config);
 var template = new require('./modules/view/template.js').Template(config.template);
+var server   = new require('./modules/server.js').Server(config.server, model);
 //var tree = new require('./modules')
 
 template.generateFrontpage();
