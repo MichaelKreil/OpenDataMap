@@ -8,22 +8,51 @@ exports.Log = function (domain) {
 		error   = '\033[31m';
 		reset   = '\033[0m';
 
+	var output = function (msg, prefix, func) {
+		if (msg !== null) {
+			var msgType = getDataType(msg);
+			var text = '';
+			switch (msgType) {
+				case '[object String]': text = msg; break;
+				case '[object Array]': text = '['+msg.join(',')+']'; break;
+				case '[object Object]':
+					text = [];
+					msg.each( function (k, v) {
+						if (getDataType(v) == '[object Function]') v = '[object Function]';
+						text.push( k + ':' + v );
+					});
+					text = '{' + text.join(', ') + '}';
+				break;
+				default:
+					text = 'UNKNOWN DATA TYPE: '+msgType;
+			}
+			func(prefix + domain + ': ' + text + reset);
+		}
+	}
+
 	me.debug = function (msg) {
-		if (msg !== null) console.info( debug   + domain + ': ' + msg + reset);
+		output(msg, debug, console.info);
 	}
 	
 	me.log = function (msg) {
-		if (msg !== null) console.log(  info    + domain + ': ' + msg + reset);
+		output(msg, info, console.info);
 	}
 
 	me.warning = function (msg) {
-		if (msg !== null) console.warn( warning + domain + ': ' + msg + reset);
+		output(msg, warning, console.warn);
 	}
 
 	me.error = function (msg) {
-		if (msg !== null) console.error(error   + domain + ': '+msg + reset);
+		output(msg, error, console.error);
 	}
 
 	return me;
 }
 
+Object.prototype.each = function (func) {
+	for (var i in this) func(i, this[i]);
+}
+
+var getDataType = function (obj) {
+	return Object.prototype.toString.call(obj);
+}
