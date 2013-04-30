@@ -16,6 +16,20 @@ exports.DB = function (config) {
 
 	log.debug('Starting');
 
+	me.getEntry = function (collectionName, id, callback, all) {
+		var collection = db.collection(collectionName);
+		log.debug('list');
+		
+		var query = {state:'accepted'};
+		if (all) query = {};
+
+		query.attributes = {id:id};
+
+		collection.find(query, function (err, docs) {
+			callback(condense(docs));
+		});
+	}
+
 	me.list = function (collectionName, callback, all) {
 		var collection = db.collection(collectionName);
 		log.debug('list');
