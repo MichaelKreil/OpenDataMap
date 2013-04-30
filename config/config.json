@@ -3,7 +3,7 @@
 		"dbname": "odmap"
 	},
 	"server": {
-
+		"port": 7001
 	},
 	"template": {
 		"pageTemplate": "templates/index.html"
