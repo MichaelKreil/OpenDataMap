@@ -24,7 +24,5 @@ exports.Model = function (config) {
 		//db.close();
 	}
 
-	topics.update({title: 'Filialen', _id:0});
-
 	return me;
 }
