@@ -12,17 +12,19 @@ exports.Model = function (config) {
 	});
 
 	me.getTopics = function () {
-
+		return topics;
 	}
 
 	me.getInstitutions = function () {
-		
+		return institutions;
 	}
 
 
 	me.destroy = function () {
 		//db.close();
 	}
+
+	topics.update({title: 'Filialen', _id:0});
 
 	return me;
 }

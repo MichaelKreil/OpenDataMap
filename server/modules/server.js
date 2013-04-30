@@ -14,6 +14,7 @@ exports.Server = function (config, model) {
 
 		if (path[0] == 'api') {
 			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.end(api.get(path.slice(1)));
 		} else {
 			res.writeHead(200, {'Content-Type': 'text/plain'});
 			res.end();
