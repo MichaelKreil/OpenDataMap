@@ -1,14 +1,23 @@
 exports.Api = function (model) {
 	var me = this;
 
-	me.get = function (path) {
+	me.get = function (path, callback) {
 		switch (path[0]) {
 			case 'topics':
-				return JSON.stringify(model.getTopics().getAll());
+				log.debug('requesting topics');
+				model.getTopics().getAll(acceptedOnly, function (data) {
+					callback(JSON.stringify(data));
+				});
 			break;
 			case 'institutions':
-				return JSON.stringify(model.getInstitutions().getAll());
+				log.debug('requesting institutions');
+				model.getInstitutions().getAll(acceptedOnly, function (data) {
+					callback(JSON.stringify(data));
+				});
 			break;
+			default:
+				log.error('unknown request: '+path.join('/'));
+				callback('"error"');
 		}
 		return path.join(',');
 	}

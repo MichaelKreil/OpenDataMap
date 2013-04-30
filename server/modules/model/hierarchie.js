@@ -4,8 +4,12 @@ exports.Hierarchie = function (options) {
 	var collectionName = options.name;
 	var maxId = 0;
 
-	me.getAll = function () {
-		return db.listAll(collectionName);
+	me.getAll = function (acceptedOnly, callback) {
+		if (acceptedOnly) {
+			db.listAccepted(collectionName, callback);
+		} else {
+			db.listAll(collectionName, callback);
+		}
 	}
 
 	me.update = function (entry) {

@@ -10,12 +10,15 @@ exports.Server = function (config, model) {
 	var server = http.createServer(function (req, res) {
 		log.debug('request: '+req.url);
 		var path = req.url.split('/').slice(1);
-		log.debug(path);
 
 		if (path[0] == 'api') {
+			log.debug('api request');
 			res.writeHead(200, {'Content-Type': 'application/json'});
-			res.end(api.get(path.slice(1)));
+			api.get(path.slice(1), function (data) {
+				res.end(data);
+			})
 		} else {
+			log.debug('frontend request');
 			res.writeHead(200, {'Content-Type': 'text/plain'});
 			res.end();
 		}
