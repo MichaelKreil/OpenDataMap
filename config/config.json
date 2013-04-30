@@ -1,0 +1,11 @@
+{
+	"db": {
+		"dbname": "odmap"
+	},
+	"server": {
+
+	},
+	"template": {
+		"pageTemplate": "templates/index.html"
+	}
+}
