@@ -3,21 +3,21 @@ exports.Api = function (model) {
 	var log = new (require('./log.js').Log)('API');
 
 	me.get = function (path, callback) {
-		var acceptedOnly = true;
+		var includingNew = false;
 		if (path[1] == 'new') {
 			log.debug('requesting also new entries');
-			acceptedOnly = false;
+			includingNew = true;
 		}
 		switch (path[0]) {
 			case 'topics':
 				log.debug('requesting topics');
-				model.getTopics().getAll(acceptedOnly, function (data) {
+				model.getTopics().getAll(includingNew, function (data) {
 					callback(JSON.stringify(data));
 				});
 			break;
 			case 'institutions':
 				log.debug('requesting institutions');
-				model.getInstitutions().getAll(acceptedOnly, function (data) {
+				model.getInstitutions().getAll(includingNew, function (data) {
 					callback(JSON.stringify(data));
 				});
 			break;
