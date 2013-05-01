@@ -13,7 +13,7 @@ exports.Log = function (domain) {
 			var msgType = getDataType(msg);
 			var text = '';
 			switch (msgType) {
-				case '[object String]': text = '"'+msg+'"'; break;
+				case '[object String]': text = msg; break;
 				case '[object Array]': text = '['+msg.join(',')+']'; break;
 				case '[object Object]':
 					text = [];
