@@ -1,16 +1,21 @@
 exports.Hierarchie = function (options) {
+	var log = new (require('../log.js').Log)('Hierarchie');
+
 	var me = this;
 	var db = options.db;
 	var collectionName = options.name;
 	var maxId = 0;
 
 	me.getAll = function (includingNew, callback) {
+		log.debug('getAll');
 		db.list(collectionName, callback, includingNew);
 	}
 
 	me.getHierarchie = function (includingNew, callback) {
+		log.debug('getHierarchie');
 		db.list(collectionName, function (list) {
 
+			log.debug('create LUT');
 			// create LUT ... for optimization ... as usual
 			var lut = [];
 			for (var i = 0; i < list.length; i++) {
@@ -18,6 +23,7 @@ exports.Hierarchie = function (options) {
 				list[i].children = [];
 			}
 
+			log.debug('create tree');
 			// creating tree with children
 			var roots = [];
 			for (var i = 0; i < list.length; i++) {
@@ -29,6 +35,8 @@ exports.Hierarchie = function (options) {
 					lut[parentId].children.push(entry);
 				}
 			}
+
+			log.debug('sort');
 			// sort
 			var sort = function (list) {
 				if (list.length >= 1) {
@@ -48,6 +56,7 @@ exports.Hierarchie = function (options) {
 	}
 
 	me.update = function (entry) {
+		log.debug('update');
 		db.update(collectionName, entry);
 	}
 
