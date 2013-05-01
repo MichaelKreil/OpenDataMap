@@ -6,7 +6,8 @@ exports.DB = function (config) {
 			- new
 			- accepted
 			- declined
-			- deleted
+		deleted:
+			true/false
 	*/
 	
 	var mongojs = require('mongojs');
@@ -34,7 +35,7 @@ exports.DB = function (config) {
 		var collection = db.collection(collectionName);
 		log.debug('list');
 		
-		var query = {state:'accepted'};
+		var query = {state:'accepted', deleted: false};
 		if (all) query = {};
 
 		collection.find(query, function (err, docs) {
@@ -46,7 +47,8 @@ exports.DB = function (config) {
 		var document = {
 			attributes: entry,
 			time: (new Date()).getTime(),
-			state: 'new'
+			state: 'new',
+			deleted: false
 		};
 		var collection = db.collection(collectionName);
 		collection.insert(document, function (err, inserted) {
