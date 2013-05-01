@@ -51,7 +51,7 @@ exports.Hierarchie = function (options) {
 			}
 			sort(roots);
 
-			return roots;
+			callback(roots);
 		}, includingNew);
 	}
 
