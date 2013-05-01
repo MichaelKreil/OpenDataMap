@@ -23,7 +23,7 @@ exports.DB = function (config) {
 		var query = {state:'accepted'};
 		if (all) query = {};
 
-		query.attributes = {id:id};
+		query.id = id;
 
 		collection.find(query, function (err, docs) {
 			callback(condense(docs));
