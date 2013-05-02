@@ -33,11 +33,14 @@ exports.Hierarchie = function (options) {
 		var roots = [];
 		for (var i = 0; i < list.length; i++) {
 			var entry = list[i];
+			
+			entry.attributes.parentId = checkInt(entry.attributes.parentId);
 			var parentId = entry.attributes.parentId;
-			if ((parentId === undefined) || (parentId == null)) {
-				roots.push(entry);
-			} else {
+			if ((parentId !== undefined) && (lut[parentId]) && (lut[parentId].children)) {
 				lut[parentId].children.push(entry);
+			} else {
+				entry.attributes.parentId = undefined;
+				roots.push(entry);
 			}
 		}
 
@@ -65,8 +68,13 @@ exports.Hierarchie = function (options) {
 		var rec = function (entries, parentId) {
 			for (var i = 0; i < entries.length; i++) {
 				var entry = entries[i];
+
+				entry.id = checkInt(entry.id);
 				if (entry.id === undefined) entry.id = db.getNewId(collectionName);
+
+				entry.attributes.parentId = checkInt(entry.attributes.parentId);
 				if (entry.attributes.parentId === undefined) entry.attributes.parentId = parentId;
+
 				list.push(entry);
 				if (entry.children) {
 					rec(entry.children, entry.id);
@@ -86,4 +94,11 @@ exports.Hierarchie = function (options) {
 	}
 
 	return me;
+}
+
+function checkInt(value) {
+	if (isFinite(value)) return value;
+	if (Object.prototype.toString.call(value) == '[Object String]') value = parseInt(value, 10);
+	if (isFinite(value)) return value;
+	return undefined;
 }
