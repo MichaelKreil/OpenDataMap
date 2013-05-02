@@ -34,7 +34,7 @@ exports.Hierarchie = function (options) {
 		for (var i = 0; i < list.length; i++) {
 			var entry = list[i];
 			var parentId = entry.attributes.parentId;
-			if ((parentId === undefined) && (parentId == null)) {
+			if ((parentId === undefined) || (parentId == null)) {
 				roots.push(entry);
 			} else {
 				lut[parentId].children.push(entry);
