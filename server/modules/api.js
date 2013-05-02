@@ -29,9 +29,7 @@ exports.Api = function (model) {
 			}
 		}
 
-		source.getAll(options, function (data) {
-			callback(JSON.stringify(data));
-		});
+		source.getAll(options, callback);
 		
 		return path.join(',');
 	}
