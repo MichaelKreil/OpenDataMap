@@ -1,0 +1,68 @@
+.content {
+	margin: 20px;
+}
+
+#tree {
+	width: 300px;
+	margin-right: -320px;
+	background: #fff;
+	border: 1px solid #eee;
+	padding: 10px;
+	float:left;
+}
+
+#tree .entry {
+	border: 1px solid #ccc;
+	background: #eee;
+	padding: 3px 5px;
+	line-height: 1em;
+	margin-bottom: 3px;
+	cursor: pointer;
+}
+
+#tree .entry:hover {
+	border-color: #bbf;
+	background-color: #ddf;
+}
+
+#tree .entry.new {
+	font-style: italic;
+	color: #aaa;
+	border: 1px solid #f7f7f7;
+	background: #f7f7f7;
+	font-size: 10px;
+}
+
+#tree .entry.new:hover {
+	border-color: #eef;
+	background-color: #eef;
+}
+
+#details {
+	margin-left: 370px;
+	border: 1px solid #eee;
+	padding: 10px;
+}
+
+#details .entry {
+}
+
+#details .entry .key {
+	width: 200px;
+	text-align: right;
+	float:left;
+	margin-top: 5px;
+}
+
+#details .entry input.key {
+	padding: 0;
+	border: none;
+	background: #f7f7f7;
+}
+
+#details .entry .value {
+	width: 200px;
+	margin-left: 20px;
+}
+
+
