@@ -16,7 +16,7 @@ exports.Hierarchie = function (options) {
 			callback(createHierarchie(list));
 		}
 
-		db.list(options, newCallback);
+		db.get(options, newCallback);
 	}
 
 	var createHierarchie = function (list) {
