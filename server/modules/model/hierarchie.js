@@ -62,6 +62,24 @@ exports.Hierarchie = function (options) {
 	me.update = function (entry) {
 		log.debug('update');
 		db.update(collectionName, entry);
+	var decodeHierarchie = function (roots) {
+		log.debug('decodeHierarchie');
+		var list = [];
+		var rec = function (entries, parentId) {
+			for (var i = 0; i < entries.length; i++) {
+				var entry = entries[i];
+				if (entry.id === undefined) entry.id = db.getNewId(collectionName);
+				if (entry.attributes.parentId === undefined) entry.attributes.parentId = parentId;
+				list.push(entry);
+				if (entry.children) {
+					rec(entry.children, entry.id);
+					entry.children = undefined;
+				}
+			}
+		}
+		rec(roots, null);
+		return list;
+	}
 	}
 
 	return me;
