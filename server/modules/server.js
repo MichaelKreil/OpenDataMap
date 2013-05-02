@@ -11,15 +11,21 @@ exports.Server = function (config, model) {
 		log.debug('request: '+req.url);
 		var path = req.url.split('/').slice(1);
 
+		var header = {
+			'Access-Control-Allow-Origin': '*',
+			'Content-Type': 'text/plain'
+		};
+		
 		if (path[0] == 'api') {
 			log.debug('api request');
-			res.writeHead(200, {'Content-Type': 'application/json'});
+			header['Content-Type'] = 'application/json';
+			res.writeHead(200, header);
 			api.get(path.slice(1), function (data) {
 				res.end(data);
 			})
 		} else {
 			log.debug('frontend request');
-			res.writeHead(200, {'Content-Type': 'text/plain'});
+			res.writeHead(200, header);
 			res.end();
 		}
 	}).listen(config.port);
