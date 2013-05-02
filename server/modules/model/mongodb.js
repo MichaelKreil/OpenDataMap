@@ -32,8 +32,31 @@ exports.DB = function (config) {
 		});
 	}
 
+	me.set = function (entries, options, callback) {
+		log.debug('set ('+options.collectionName+')');
 		var collection = db.collection(options.collectionName);
 
+		for (var i = 0; i < entries.length; i++) {
+			var entry = entries[i];
+			var newEntry = {
+				attributes: entry.attributes,
+				time: (new Date()).getTime(),
+				state: 'new',
+				deleted: false,
+				user: options.user,
+				id: entry.id
+			};
+
+			if (newEntry.id === undefined) me.getNewId(options.collectionName)
+			if (entry._id) newEntry.previous_id = entry._id;
+
+			log.debug('new entry: '+JSON.stringify(newEntry));
+			collection.insert(newEntry, function (err, inserted) {
+				if (err) {
+					log.error(err);
+				}
+			});
+		}
 	}
 
 	me.update = function (collectionName, entry) {
