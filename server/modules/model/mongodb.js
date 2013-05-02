@@ -27,8 +27,24 @@ exports.DB = function (config) {
 		if (options.id) query.id = id;
 
 		collection.find(query, function (err, docs) {
+			if (err) log.error(err);
 			console.log(docs);
 			callback(condense(docs));
+		});
+	}
+
+	var getLast = function (collectionName, id, callback) {
+		log.debug('getLast ('+collectionName+': '+id+')');
+		var collection = db.collection(collectionName);
+		var alreadyFound = false;
+		collection.find({id:id}).sort({time:-1}).limit(1).forEach(function (err, doc) {
+			if (err) log.error(err);
+			if (doc) {
+				alreadyFound = true;
+				callback(doc);
+			} else {
+				if (!alreadyFound) callback(false);
+			}
 		});
 	}
 
@@ -36,8 +52,8 @@ exports.DB = function (config) {
 		log.debug('set ('+options.collectionName+')');
 		var collection = db.collection(options.collectionName);
 
-		for (var i = 0; i < entries.length; i++) {
-			var entry = entries[i];
+		entries.forEach(function (entry) {
+
 			var newEntry = {
 				attributes: entry.attributes,
 				time: (new Date()).getTime(),
@@ -47,16 +63,18 @@ exports.DB = function (config) {
 				id: entry.id
 			};
 
-			if (newEntry.id === undefined) me.getNewId(options.collectionName)
+			if (newEntry.id === undefined) newEntry.id = me.getNewId(options.collectionName)
 			if (entry._id) newEntry.previous_id = entry._id;
 
-			log.debug('new entry: '+JSON.stringify(newEntry));
-			collection.insert(newEntry, function (err, inserted) {
-				if (err) {
-					log.error(err);
+			getLast(options.collectionName, newEntry.id, function (doc) {
+				if (!sameObject(doc.attributes, newEntry.attributes)) {
+					collection.insert(newEntry, function (err, inserted) {
+						log.debug('new entry: '+JSON.stringify(newEntry));
+						if (err) log.error(err);
+					});
 				}
-			});
-		}
+			})
+		});
 	}
 
 	me.update = function (collectionName, entry) {
@@ -109,3 +127,22 @@ exports.DB = function (config) {
 
 	return me;
 }
+
+
+
+var sameObject = function (obj1, obj2) {
+	if (!obj1 && obj2) return false;
+	if (obj1 && !obj2) return false;
+
+	var same = true;
+	for (var i in obj1) if (obj1.hasOwnProperty(i)) {
+		if (obj1[i] != obj2[i]) same = false;
+	}
+	for (var i in obj2) if (obj2.hasOwnProperty(i)) {
+		if (obj1[i] != obj2[i]) same = false;
+	}
+	return same;
+}
+
+
+
