@@ -3,6 +3,7 @@ exports.Api = function (model) {
 	var log = new (require('./log.js').Log)('API');
 
 	me.get = function (path, callback) {
+		log.debug('get');
 		var source = getSource(path[0]);
 
 		var options = {};
@@ -33,6 +34,14 @@ exports.Api = function (model) {
 		
 		return path.join(',');
 	}
+
+	me.set = function (path, data, user, callback) {
+		log.debug('set');
+		var source = getSource(path[0]);
+		var options = { user: user };
+		source.set(data, options, callback);
+	}
+
 	var getSource = function (source) {
 		switch (source) {
 			case 'topics':
