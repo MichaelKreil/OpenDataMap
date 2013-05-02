@@ -28,7 +28,6 @@ exports.DB = function (config) {
 
 		collection.find(query, function (err, docs) {
 			if (err) log.error(err);
-			console.log(docs);
 			callback(condense(docs));
 		});
 	}
@@ -69,12 +68,13 @@ exports.DB = function (config) {
 			getLast(options.collectionName, newEntry.id, function (doc) {
 				if (!sameObject(doc.attributes, newEntry.attributes)) {
 					collection.insert(newEntry, function (err, inserted) {
-						log.debug('new entry: '+JSON.stringify(newEntry));
+						log.log('new entry: '+JSON.stringify(newEntry));
 						if (err) log.error(err);
 					});
 				}
 			})
 		});
+		callback('ok');
 	}
 
 	me.update = function (collectionName, entry) {
