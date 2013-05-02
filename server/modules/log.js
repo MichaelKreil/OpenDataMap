@@ -37,7 +37,7 @@ exports.Log = function (domain) {
 	}
 	
 	me.log = function (msg) {
-		output(msg, info, console.info);
+		output(msg, log, console.log);
 	}
 
 	me.warning = function (msg) {
