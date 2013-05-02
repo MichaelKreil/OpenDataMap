@@ -3,21 +3,7 @@ exports.Api = function (model) {
 	var log = new (require('./log.js').Log)('API');
 
 	me.get = function (path, callback) {
-		var source = path[0];
-
-		switch (source) {
-			case 'topics':
-				log.debug('requesting topics');
-				source = model.getTopics();
-			break;
-			case 'institutions':
-				log.debug('requesting institutions');
-				source = model.getInstitutions();
-			break;
-			default:
-				log.error('unknown request: '+path.join('/'));
-				callback('"error"');
-		}
+		var source = getSource(path[0]);
 
 		var options = {};
 		var call = source.getAll;
@@ -49,5 +35,21 @@ exports.Api = function (model) {
 		
 		return path.join(',');
 	}
+	var getSource = function (source) {
+		switch (source) {
+			case 'topics':
+				log.debug('requesting topics');
+				return model.getTopics();
+			break;
+			case 'institutions':
+				log.debug('requesting institutions');
+				return model.getInstitutions();
+			break;
+			default:
+				log.error('unknown request: '+path.join('/'));
+				callback('"error"');
+		}
+	}
+
 	return me;
 }
