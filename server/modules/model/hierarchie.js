@@ -4,7 +4,7 @@ exports.Hierarchie = function (options) {
 	var me = this;
 	var db = options.db;
 	var collectionName = options.name;
-	var maxId = 0;
+	db.calcNewId(collectionName);
 
 	me.getAll = function (options, callback) {
 		log.debug('getAll');
