@@ -59,9 +59,6 @@ exports.Hierarchie = function (options) {
 		return roots;
 	}
 
-	me.update = function (entry) {
-		log.debug('update');
-		db.update(collectionName, entry);
 	var decodeHierarchie = function (roots) {
 		log.debug('decodeHierarchie');
 		var list = [];
@@ -80,6 +77,12 @@ exports.Hierarchie = function (options) {
 		rec(roots, null);
 		return list;
 	}
+
+	me.set = function (data, options, callback) {
+		log.debug('set');
+		data = decodeHierarchie(data);
+		options.collectionName = collectionName;
+		db.set(data, options, callback);
 	}
 
 	return me;
