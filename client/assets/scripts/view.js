@@ -2,7 +2,7 @@ var updateTree = function () {
 	var node = $('#tree');
 	node.empty();
 
-	var output = function (list, indent) {
+	var output = function (list, indent, parentId) {
 		var margin = indent*20;
 		
 		var subnode = $('<div class="entry new" style="margin-left:'+margin+'px">Neuen Eintrag hinzufügen</div>');
@@ -21,16 +21,17 @@ var updateTree = function () {
 				})
 				node.append(subnode);
 
-				output(entry.children, indent+1);
+				output(entry.children, indent+1, entry.id);
 			});
 		}
 	}
 
-	output(topics, 0);
+	output(topics, 0, null);
 }
 
 var attributeTranslation = {
-	title: {title:'Titel'}
+	title: {title:'Titel'},
+	parentId: {title:'Unterelement von', type:'parent'}
 };
 
 var showDetails = function (entry) {
@@ -73,15 +74,34 @@ var createDetailEntry = function (name, value, node) {
 	} else {
 		label = $('<input class="key" name="'+name+'" type="text" value="'+name+'">');
 	}
-	var input = $('<input class="value" type="text" value="'+value+'">');
+	var input = '<input class="value" type="text" value="'+value+'">';
+	if (attributeTranslation[name] && attributeTranslation[name].type) {
+		switch (attributeTranslation[name].type) {
+			case 'parent':
+				input = '<option value=""></option>';
+				var rec = function (list, indent) {
+					for (var i = 0; i < list.length; i++) {
+						var entry = list[i];
+						var title = new Array(indent + 1).join('&nbsp;-&nbsp;') + entry.attributes.title;
+						var selected = (entry.id == value) ? 'selected="selected"' : '';
+						input += '<option value="'+entry.id+'" '+selected+'>'+title+'</option>';
+						if (entry.children) rec(entry.children, indent+1);
+					}
+				}
+				rec(topics, 0);
+				input = '<select class="value" value="'+value+'">'+input+'</select>';
+			break;
+		}
+	}
+
 	var subnode = $('<div class="entry"></div>');
 	node.append(subnode);
 	subnode.append(label);
-	subnode.append(input);
+	subnode.append($(input));
 }
 
-var addChild = function (list) {
-	var entry = {attributes:{title:'Neuer Eintrag'}, children:[]};
+var addChild = function (list, parentId) {
+	var entry = {attributes:{title:'Neuer Eintrag', parentId:parentId}, children:[]};
 	list.push(entry);
 	return entry;
 }
