@@ -79,7 +79,7 @@ exports.DB = function (config) {
 		var container = {};
 		for (var i = 0; i < data.length; i++) {
 			var entry = data[i];
-			var id = '_'+entry.attributes.id;
+			var id = '_'+entry.id;
 			if ((container[id] === undefined) || (container[id].time < entry.time)) {
 				container[id] = entry;
 			}
