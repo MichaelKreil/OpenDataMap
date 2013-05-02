@@ -17,26 +17,26 @@ exports.DB = function (config) {
 
 	log.debug('Starting');
 
-	me.getEntry = function (collectionName, id, callback, all) {
-		var collection = db.collection(collectionName);
+	me.getEntry = function (options, callback) {
+		var collection = db.collection(options.collectionName);
 		log.debug('list');
 		
-		var query = {state:'accepted'};
+		var query = {state:'accepted', deleted:false};
 		if (all) query = {};
 
-		query.id = id;
+		query.id = options.id;
 
 		collection.find(query, function (err, docs) {
 			callback(condense(docs));
 		});
 	}
 
-	me.list = function (collectionName, callback, all) {
-		var collection = db.collection(collectionName);
+	me.list = function (options, callback) {
+		var collection = db.collection(options.collectionName);
 		log.debug('list');
 		
 		var query = {state:'accepted', deleted: false};
-		if (all) query = {};
+		if (options.includingNew) query = {};
 
 		collection.find(query, function (err, docs) {
 			callback(condense(docs));

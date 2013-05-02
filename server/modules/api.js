@@ -19,24 +19,22 @@ exports.Api = function (model) {
 				callback('"error"');
 		}
 
-
+		var options = {};
 		var call = source.getAll;
-		var ids = [];
-		var includingNew = false;
 		var flags = path.splice(1);
 		for (var i = 0; i < flags.length; i++) {
 			var flag = flags[i];
 			switch (flag) {
 				case 'new':
-					includingNew = true;
+					options.includingNew = true;
 					log.debug('include new');
 				break;
 				case 'list':
-					call = source.getAll;
+					options.asHierarchie = false;
 					log.debug('as list');
 				break;
 				case 'tree':
-					call = source.getHierarchie;
+					options.asHierarchie = true;
 					log.debug('as tree');
 				break;
 				case '': /*ignore*/ break;
@@ -45,7 +43,7 @@ exports.Api = function (model) {
 			}
 		}
 
-		call(includingNew, function (data) {
+		source.getAll(options, function (data) {
 			callback(JSON.stringify(data));
 		});
 		
