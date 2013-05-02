@@ -17,12 +17,39 @@ exports.Server = function (config, model) {
 		};
 		
 		if (path[0] == 'api') {
-			log.debug('api request');
-			header['Content-Type'] = 'application/json';
-			res.writeHead(200, header);
-			api.get(path.slice(1), function (data) {
-				res.end(data);
-			})
+			if (req.method == 'POST') {
+
+				log.debug('api POST request');
+
+				console.log(req.connection.remoteAddress);
+
+				var body = '';
+				req.on('data', function (data) { body += data;	});
+				req.on('end', function () {
+					try {
+						body = JSON.parse(body);
+					} catch (err) {
+						log.error('POST request is invalid JSON');
+						log.error('"'+body+'"');
+						body = [];
+					}
+					var user = {name:'unknown', ip:req.connection.remoteAddress};
+					api.set(path.slice(1), body, user, function (data) {
+						header['Content-Type'] = 'application/json';
+						res.writeHead(200, header);
+						res.end(data);
+					})
+				});
+			} else {
+				log.debug('api GET request');
+				header['Content-Type'] = 'application/json';
+				res.writeHead(200, header);
+				api.get(path.slice(1), function (data) {
+					data = JSON.stringify(data);
+					log.debug(data);
+					res.end(data);
+				})
+			}
 		} else {
 			log.debug('frontend request');
 			res.writeHead(200, header);
