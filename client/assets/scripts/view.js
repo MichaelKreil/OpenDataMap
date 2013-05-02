@@ -4,6 +4,13 @@ var updateTree = function () {
 
 	var output = function (list, indent) {
 		var margin = indent*20;
+		
+		var subnode = $('<div class="entry new" style="margin-left:'+margin+'px">Neuen Eintrag hinzufügen</div>');
+		subnode.click(function () {
+			showDetails(addChild(list, parentId));
+		})
+		node.append(subnode);
+
 		if (list && list.length > 0) {
 			$.each(list, function (i, entry) {
 				console.log(entry);
@@ -17,11 +24,6 @@ var updateTree = function () {
 				output(entry.children, indent+1);
 			});
 		}
-		var subnode = $('<div class="entry new" style="margin-left:'+margin+'px">Neuen Eintrag hinzufügen</div>');
-		subnode.click(function () {
-			showDetails(addChild(list));
-		})
-		node.append(subnode);
 	}
 
 	output(topics, 0);
