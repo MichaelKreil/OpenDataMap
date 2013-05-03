@@ -5,7 +5,7 @@ exports.Server = function (config, model) {
 	var http = new require('http');
 	var api = new (require('./api.js').Api)(model);
 
-	log.debug('Starting');
+	log.log('Starting');
 
 	var server = http.createServer(function (req, res) {
 		log.debug('request: '+req.url);
@@ -57,7 +57,7 @@ exports.Server = function (config, model) {
 		}
 	}).listen(config.port);
 
-	log.debug('Started');
+	log.log('Started');
 
 	me.stop = function () {
 		log.debug('Stopping');

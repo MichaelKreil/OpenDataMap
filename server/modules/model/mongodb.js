@@ -100,7 +100,7 @@ exports.DB = function (config) {
 	var maxIds = {};
 	me.calcNewId = function (collectionName) {
 		var collection = db.collection(collectionName);
-		console.log('calcNewId ('+collectionName+')');
+		log.debug('calcNewId ('+collectionName+')');
 		maxIds[collectionName] = 1;
 		collection.find().sort({'id':-1}).limit(1).forEach(function(err, doc) {
 			if (doc != null) maxIds[collectionName] = doc.id;
