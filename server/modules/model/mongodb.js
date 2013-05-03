@@ -21,9 +21,12 @@ exports.DB = function (config) {
 		log.debug('get ('+options.collectionName+')');
 		var collection = db.collection(options.collectionName);
 		
-		var query = {};
+		var query = {deleted: false};
 
-		if (!options.includingNew) query.state = 'accepted';
+		if (!options.includingNew) {
+			query.state = 'accepted';
+			query.deleted = true;
+		}
 		if (options.id) query.id = id;
 
 		collection.find(query, function (err, docs) {
@@ -61,6 +64,7 @@ exports.DB = function (config) {
 				user: options.user,
 				id: entry.id
 			};
+			if (entry.deleted) newEntry.deleted = true;
 
 			if (newEntry.id === undefined) newEntry.id = me.getNewId(options.collectionName)
 			if (entry._id) newEntry.previous_id = entry._id;
