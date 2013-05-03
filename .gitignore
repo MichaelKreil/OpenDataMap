@@ -1,2 +1,6 @@
 
 other/
+
+*.sublime-project
+
+*.sublime-workspace
