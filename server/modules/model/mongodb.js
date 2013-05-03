@@ -70,7 +70,7 @@ exports.DB = function (config) {
 			if (entry._id) newEntry.previous_id = entry._id;
 
 			getLast(options.collectionName, newEntry.id, function (doc) {
-				if (!sameObject(doc.attributes, newEntry.attributes)) {
+				if (!sameObject(doc, newEntry)) {
 					collection.insert(newEntry, function (err, inserted) {
 						log.log('new entry: '+JSON.stringify(newEntry));
 						if (err) log.error(err);
@@ -119,16 +119,19 @@ exports.DB = function (config) {
 
 
 var sameObject = function (obj1, obj2) {
-	if (!obj1 && obj2) return false;
-	if (obj1 && !obj2) return false;
+	if (!obj1.attributes && obj2.attributes) return false;
+	if (obj1.attributes && !obj2.attributes) return false;
 
 	var same = true;
-	for (var i in obj1) if (obj1.hasOwnProperty(i)) {
-		if (obj1[i] != obj2[i]) same = false;
+	var attr1 = obj1.attributes;
+	var attr2 = obj2.attributes;
+	for (var i in attr1) if (attr1.hasOwnProperty(i)) {
+		if (attr1[i] != attr2[i]) same = false;
 	}
-	for (var i in obj2) if (obj2.hasOwnProperty(i)) {
-		if (obj1[i] != obj2[i]) same = false;
+	for (var i in attr2) if (attr2.hasOwnProperty(i)) {
+		if (attr1[i] != attr2[i]) same = false;
 	}
+	if (obj1.deleted !== obj2.deleted) same = false;
 	return same;
 }
 
