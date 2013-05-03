@@ -1,1 +1,0 @@
-mongod --rest --config /etc/mongodb.conf
