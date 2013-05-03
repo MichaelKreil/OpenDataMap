@@ -81,22 +81,6 @@ exports.DB = function (config) {
 		callback('ok');
 	}
 
-	me.update = function (collectionName, entry) {
-		var document = {
-			attributes: entry,
-			time: (new Date()).getTime(),
-			state: 'new',
-			deleted: false
-		};
-		var collection = db.collection(collectionName);
-		collection.insert(document, function (err, inserted) {
-			if (err) {
-				log.error(err);
-				log.error(entry);
-			}
-		});
-	}
-
 	var condense = function(data) {
 		var container = {};
 		for (var i = 0; i < data.length; i++) {
