@@ -47,9 +47,29 @@ var showDetails = function (entry) {
 		createDetailEntry('', '', node);
 	}
 
-	var button = $('<button class="btn" type="button">Speichern</button>');
-	node.append(button);
-	button.click(function () {
+	var saveButton = $('<button class="btn" type="button">Speichern</button>');
+	node.append(saveButton);
+	saveButton.click(function () {
+		var attributes = {};
+		node.find('.entry').each(function (i, node) {
+			var key = $(node).find('.key');
+			if (key.val()) {
+				key = key.val()
+			} else {
+				key = key.attr('name');
+			}
+			var value = $(node).find('.value').val();
+			if (key != '') attributes[key] = value;
+		});
+		entry.attributes = attributes;
+		updateTree();
+		node.empty();
+	});
+
+	var deleteButton = $('<button class="btn" type="button">Löschen</button>');
+	node.append(deleteButton);
+	deleteButton.click(function () {
+		entry.deleted = true;
 		var attributes = {};
 		node.find('.entry').each(function (i, node) {
 			var key = $(node).find('.key');
