@@ -15,7 +15,7 @@ exports.DB = function (config) {
 	
 	var db = mongojs(config.dbname);
 
-	log.debug('Starting');
+	log.debug('starting');
 
 	me.get = function (options, callback) {
 		log.debug('get ('+options.collectionName+')');
@@ -27,10 +27,13 @@ exports.DB = function (config) {
 		if (options.includeDeleted) delete query.deleted;
 
 		if (options.id) query.id = id;
+		
+		log.debug('query: '+JSON.stringify(query));
 
 		collection.find(query, function (err, docs) {
 			if (err) log.error(err);
 			callback(condense(docs));
+			//console.log(docs);
 		});
 	}
 
@@ -107,7 +110,7 @@ exports.DB = function (config) {
 	}
 
 	me.getNewId = function (collectionName) {
-		console.log('getNewId ('+collectionName+')');
+		log.log('getNewId ('+collectionName+')');
 		maxIds[collectionName]++;
 		return maxIds[collectionName];
 	}

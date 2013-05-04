@@ -37,6 +37,7 @@ exports.Server = function (config, model) {
 					api.set(path.slice(1), body, user, function (data) {
 						header['Content-Type'] = 'application/json';
 						res.writeHead(200, header);
+						log.debug(data);
 						res.end(data);
 					})
 				});
