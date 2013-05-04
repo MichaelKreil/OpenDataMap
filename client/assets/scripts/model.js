@@ -14,7 +14,8 @@ var apiPost = function (url, data, callback) {
 	$.ajax(odm.api + url, {
 		data: data,
 		type: 'POST',
-		success: callback
+		complete: callback,
+		error: function (a,b,c) {console.error(a,b,c);},
 	})
 }
 
