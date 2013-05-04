@@ -79,7 +79,7 @@ exports.DB = function (config) {
 				}
 			})
 		});
-		callback('ok');
+		callback(true);
 	}
 
 	var condense = function(data, options) {

@@ -35,8 +35,6 @@ exports.Api = function (model) {
 		}
 
 		source.getAll(options, callback);
-		
-		return path.join(',');
 	}
 
 	me.set = function (path, data, user, callback) {

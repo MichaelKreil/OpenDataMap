@@ -17,6 +17,7 @@ exports.Server = function (config, model) {
 		};
 		
 		if (path[0] == 'api') {
+			header['Content-Type'] = 'application/json';
 			if (req.method == 'POST') {
 
 				log.debug('api POST request');
@@ -35,17 +36,16 @@ exports.Server = function (config, model) {
 					}
 					var user = {name:'unknown', ip:req.connection.remoteAddress};
 					api.set(path.slice(1), body, user, function (data) {
-						header['Content-Type'] = 'application/json';
 						res.writeHead(200, header);
+						data = JSON.stringify(data);
 						log.debug(data);
 						res.end(data);
 					})
 				});
 			} else {
 				log.debug('api GET request');
-				header['Content-Type'] = 'application/json';
-				res.writeHead(200, header);
 				api.get(path.slice(1), function (data) {
+					res.writeHead(200, header);
 					data = JSON.stringify(data);
 					log.debug(data);
 					res.end(data);
