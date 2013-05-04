@@ -4,7 +4,9 @@ var odm = {
 
 $(function () {
 	$('#save').click(function () {
-		apiPost('topics', topics);
+		apiPost(path, topics, function () {
+			$('#savecheckmark').show().delay(1000).fadeOut(500);
+		});
 	});
 
 	apiGet('topics/new/tree', function (data) {

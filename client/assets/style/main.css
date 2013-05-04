@@ -74,4 +74,14 @@
 	margin-left: 20px;
 }
 
+.checkmark {
+	display: none;
+}
 
+.checkmark:before {
+	content: "\2713";
+	font-size: 30px;
+	font-weight: bold;
+	color: #0A0;
+	vertical-align: middle;
+}
