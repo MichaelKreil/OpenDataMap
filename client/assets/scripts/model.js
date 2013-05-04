@@ -1,4 +1,4 @@
-var topics;
+var data;
 
 
 var apiGet = function (url, callback) {

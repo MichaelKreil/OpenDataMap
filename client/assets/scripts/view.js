@@ -29,7 +29,7 @@ var updateTree = function () {
 		}
 	}
 
-	output(topics, 0, null);
+	output(data, 0, null);
 }
 
 var attributeTranslation = {
@@ -99,7 +99,7 @@ var createDetailEntry = function (name, value, node) {
 						if (entry.children) rec(entry.children, indent+1);
 					}
 				}
-				rec(topics, 0);
+				rec(data, 0);
 				input = '<select class="value" value="'+value+'">'+input+'</select>';
 			break;
 		}

@@ -11,8 +11,8 @@ $(function () {
 		});
 	});
 
-	apiGet(path+'/new/tree', function (data) {
-		topics = data;
+	apiGet(path + '/new/tree', function (newData) {
+		data = newData;
 		updateTree();
 	})
 });
