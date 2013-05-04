@@ -6,6 +6,9 @@ exports.Hierarchie = function (options) {
 	var collectionName = options.name;
 	db.calcNewId(collectionName);
 
+	me.has = function (query, callback) {
+		db.has(query, collectionName, callback);
+	}
 	
 	me.get = function (options, callback) {
 		log.debug('get');
