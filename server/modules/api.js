@@ -53,6 +53,10 @@ exports.Api = function (model) {
 				log.debug('requesting institutions');
 				return model.getInstitutions();
 			break;
+			case 'relations':
+				log.debug('requesting relations');
+				return model.getRelations();
+			break;
 			default:
 				log.error('unknown request: '+path.join('/'));
 				callback('"error"');
