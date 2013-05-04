@@ -13,8 +13,12 @@ exports.Api = function (model) {
 			var flag = flags[i];
 			switch (flag) {
 				case 'new':
-					options.includingNew = true;
+					options.includeNew = true;
 					log.debug('include new');
+				break;
+				case 'deleted':
+					options.includeDeleted = true;
+					log.debug('include deleted');
 				break;
 				case 'list':
 					options.asHierarchie = false;

@@ -21,12 +21,11 @@ exports.DB = function (config) {
 		log.debug('get ('+options.collectionName+')');
 		var collection = db.collection(options.collectionName);
 		
-		var query = {deleted: false};
+		var query = {deleted: false, state: 'accepted'};
 
-		if (!options.includingNew) {
-			query.state = 'accepted';
-			query.deleted = true;
-		}
+		if (options.includeNew) delete query.state;
+		if (options.includeDeleted) delete query.deleted;
+
 		if (options.id) query.id = id;
 
 		collection.find(query, function (err, docs) {
