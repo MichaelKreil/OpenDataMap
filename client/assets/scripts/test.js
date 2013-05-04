@@ -2,6 +2,8 @@ var odm = {
 	api: 'http://127.0.0.1:7001/api/'
 };
 
+var path = 'topics';
+
 $(function () {
 	$('#save').click(function () {
 		apiPost(path, topics, function () {
@@ -9,7 +11,7 @@ $(function () {
 		});
 	});
 
-	apiGet('topics/new/tree', function (data) {
+	apiGet(path+'/new/tree', function (data) {
 		topics = data;
 		updateTree();
 	})

@@ -3,19 +3,22 @@ var updateTree = function () {
 	node.empty();
 
 	var output = function (list, indent, parentId) {
-		var margin = indent*20;
+		var margin = indent*16;
 		
-		var subnode = $('<div class="entry new" style="margin-left:'+margin+'px">Neuen Eintrag hinzufügen</div>');
+		var subnode = $('<div class="addnew">+</div>');
 		subnode.click(function () {
 			showDetails(addChild(list, parentId));
 		})
 		node.append(subnode);
+		node.append('<br style="clear:both;" />');
 
 		if (list && list.length > 0) {
 			$.each(list, function (i, entry) {
-				console.log(entry);
+				var classes = ['entry'];
+				if (entry.deleted) classes.push('deleted');
+				if (entry.state == 'new') classes.push('new');
 
-				var subnode = $('<div class="entry" style="margin-left:'+margin+'px">'+entry.attributes.title+'</div>');
+				var subnode = $('<div class="'+classes.join(' ')+'" style="margin-left:'+margin+'px;width:'+(270-margin)+'px">'+entry.attributes.title+'</div>');
 				subnode.click(function () {
 					showDetails(entry);
 				})
@@ -70,18 +73,6 @@ var showDetails = function (entry) {
 	node.append(deleteButton);
 	deleteButton.click(function () {
 		entry.deleted = true;
-		var attributes = {};
-		node.find('.entry').each(function (i, node) {
-			var key = $(node).find('.key');
-			if (key.val()) {
-				key = key.val()
-			} else {
-				key = key.attr('name');
-			}
-			var value = $(node).find('.value').val();
-			if (key != '') attributes[key] = value;
-		});
-		entry.attributes = attributes;
 		updateTree();
 		node.empty();
 	});

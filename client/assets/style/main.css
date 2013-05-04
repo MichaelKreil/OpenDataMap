@@ -24,25 +24,42 @@
 	padding: 3px 5px;
 	line-height: 1em;
 	margin-bottom: 3px;
+	margin-right: 2px;
 	cursor: pointer;
-	font-size: 12px;
+	font-size: 11px;
+	float: left;
+	color: #000;
 }
 
 #tree .entry:hover {
-	border-color: #bbf;
-	background-color: #ddf;
+	border-color: #000;
+}
+
+#tree .entry.deleted {
+	text-decoration: line-through;
 }
 
 #tree .entry.new {
+	color: #888;
+}
+
+#tree .addnew {
+	float: left;
 	font-style: italic;
 	color: #aaa;
 	border: 1px solid #f7f7f7;
 	background: #f7f7f7;
-	font-size: 10px;
-	padding: 0px 5px;
+	font-size: 12px;
+	text-align: center;
+	padding: 0px;
+	width: 11px;
+	height: 11px;
+	line-height: 11px;
+	margin-top: 3px;
+	cursor: pointer;
 }
 
-#tree .entry.new:hover {
+#tree .addnew:hover {
 	border-color: #eef;
 	background-color: #eef;
 }
