@@ -1,5 +1,17 @@
-var data;
+var topics, institutions, relations;
 
+var apiStart = function (callback) {
+	apiGet('topics/new/tree', function (data) {
+		topics = data;
+		apiGet('institutions/new/tree', function (data) {
+			institutions = data;
+			apiGet('relations/new', function (data) {
+				relations = data;
+				callback();
+			});
+		});
+	});
+}
 
 var apiGet = function (url, callback) {
 	$.ajax(odm.api + url, {

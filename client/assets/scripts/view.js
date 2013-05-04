@@ -1,13 +1,14 @@
 var updateTree = function () {
 	var node = $('#tree');
 	node.empty();
+	$('#details').empty();
 
 	var output = function (list, indent, parentId) {
 		var margin = indent*16;
 		
 		var subnode = $('<div class="addnew">+</div>');
 		subnode.click(function () {
-			showDetails(addChild(list, parentId));
+			showDetails(addChild(list, parentId), treeAttributes);
 		})
 		node.append(subnode);
 		node.append('<br style="clear:both;" />');
@@ -18,9 +19,9 @@ var updateTree = function () {
 				if (entry.deleted) classes.push('deleted');
 				if (entry.state == 'new') classes.push('new');
 
-				var subnode = $('<div class="'+classes.join(' ')+'" style="margin-left:'+margin+'px;width:'+(270-margin)+'px">'+entry.attributes.title+'</div>');
+				var subnode = $('<div class="'+classes.join(' ')+'" style="margin-left:'+margin+'px;width:'+(470-margin)+'px">'+entry.attributes.title+'</div>');
 				subnode.click(function () {
-					showDetails(entry);
+					showDetails(entry, treeAttributes);
 				})
 				node.append(subnode);
 
@@ -35,24 +36,34 @@ var updateTree = function () {
 var updateList = function () {
 	var node = $('#tree');
 	node.empty();
+	$('#details').empty();
+
+	$(data).each(function (i, entry) {
+		var classes = ['entry'];
+		if (entry.deleted) classes.push('deleted');
+		if (entry.state == 'new') classes.push('new');
+
+		var title = entry.attributes.title;
+		var subnode = $('<div class="'+classes.join(' ')+'" style="float:none">'+title+'</div>');
+		subnode.click(function () {
+			showDetails(entry, listAttributes);
+		})
+		node.append(subnode);
+
+	})
 }
 
-var attributeTranslation = {
-	title: {title:'Titel'},
-	parentId: {title:'Unterelement von', type:'parent'}
-};
-
-var showDetails = function (entry) {
+var showDetails = function (entry, attributes) {
 	var node = $('#details');
 	node.empty();
 
 	var attributes = entry.attributes;
 	for (var key in attributes) {
-		createDetailEntry(key, attributes[key], node);
+		createDetailEntry(key, attributes[key], node, attributes);
 	}
 	
 	for (var i = 0; i < 5; i++) {
-		createDetailEntry('', '', node);
+		createDetailEntry('', '', node, attributes);
 	}
 
 	var saveButton = $('<button class="btn" type="button">Speichern</button>');
@@ -81,18 +92,29 @@ var showDetails = function (entry) {
 		updateTree();
 		node.empty();
 	});
-}
+};
 
-var createDetailEntry = function (name, value, node) {
+var treeAttributes = {
+	title: {title:'Titel'},
+	parentId: {title:'Unterelement von', type:'parent'}
+};
+
+var listAttributes = {
+	title: {title:'Titel'},
+	topics: {title:'Themen', type:'lookup'},
+	institutions: {title:'Themen', type:'lookup'}
+};
+
+var createDetailEntry = function (name, value, node, attributes) {
 	var label;
-	if (attributeTranslation[name] !== undefined) {
-		label = $('<label class="key" name="'+name+'">'+attributeTranslation[name].title+'</label>');
+	if (attributes[name] !== undefined) {
+		label = $('<label class="key" name="'+name+'">'+attributes[name].title+'</label>');
 	} else {
 		label = $('<input class="key" name="'+name+'" type="text" value="'+name+'">');
 	}
 	var input = '<input class="value" type="text" value="'+value+'">';
-	if (attributeTranslation[name] && attributeTranslation[name].type) {
-		switch (attributeTranslation[name].type) {
+	if (attributes[name] && attributes[name].type) {
+		switch (attributes[name].type) {
 			case 'parent':
 				input = '<option value=""></option>';
 				var rec = function (list, indent) {
@@ -117,7 +139,7 @@ var createDetailEntry = function (name, value, node) {
 }
 
 var addChild = function (list, parentId) {
-	var entry = {attributes:{title:'Neuer Eintrag', parentId:parentId}, children:[]};
+	var entry = {attributes:{title:'Neuer Eintrag', parentId:parentId}, children:[], state:"new", deleted:"false"};
 	list.push(entry);
 	return entry;
 }

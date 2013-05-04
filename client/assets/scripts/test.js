@@ -2,7 +2,7 @@ var odm = {
 	api: 'http://127.0.0.1:7001/api/'
 };
 
-var path = 'topics';
+var path, data;
 
 $(function () {
 	$('#save').click(function () {
@@ -18,33 +18,24 @@ $(function () {
 	});
 
 	$('#btnTopics').click(function () {
-		getTreeData('topics');
+		path = 'topics';
+		data = topics;
+		updateTree();
 	});
 
 	$('#btnInstitutions').click(function () {
-		getTreeData('institutions');
+		path = 'institutions';
+		data = institutions;
+		updateTree();
 	});
 
 	$('#btnRelations').click(function () {
-		getListData('relations');
+		path = 'relations';
+		data = relations;
+		updateList();
 	});
 
-	$('#btnTopics').trigger('click');
+	apiStart(function () {
+		$('#btnTopics').trigger('click');
+	})
 });
-
-function getTreeData(newPath) {
-	path = newPath;
-	apiGet(path + '/new/tree', function (newData) {
-		data = newData;
-		updateTree();
-	})
-}
-
-
-function getListData(newPath) {
-	path = newPath;
-	apiGet(path + '/new', function (newData) {
-		data = newData;
-		updateList();
-	})
-}
