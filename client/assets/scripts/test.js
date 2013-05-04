@@ -6,7 +6,7 @@ var path = 'topics';
 
 $(function () {
 	$('#save').click(function () {
-		apiPost(path, topics, function () {
+		apiPost(path, data, function () {
 			$('#savecheckmark').show().delay(1000).fadeOut(500);
 		});
 	});
