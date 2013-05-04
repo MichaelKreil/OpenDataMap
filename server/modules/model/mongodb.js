@@ -21,10 +21,9 @@ exports.DB = function (config) {
 		log.debug('get ('+options.collectionName+')');
 		var collection = db.collection(options.collectionName);
 		
-		var query = {deleted: false, state: 'accepted'};
+		var query = {state: 'accepted'};
 
 		if (options.includeNew) delete query.state;
-		if (options.includeDeleted) delete query.deleted;
 
 		if (options.id) query.id = id;
 		
@@ -32,8 +31,8 @@ exports.DB = function (config) {
 
 		collection.find(query, function (err, docs) {
 			if (err) log.error(err);
-			callback(condense(docs));
 			//console.log(docs);
+			callback(condense(docs, options));
 		});
 	}
 
@@ -83,7 +82,7 @@ exports.DB = function (config) {
 		callback('ok');
 	}
 
-	var condense = function(data) {
+	var condense = function(data, options) {
 		var container = {};
 		for (var i = 0; i < data.length; i++) {
 			var entry = data[i];
@@ -94,7 +93,9 @@ exports.DB = function (config) {
 		}
 		var list = [];
 		for (var i in container) if (container.hasOwnProperty(i)) {
-			list.push(container[i]);
+			if (options.includeDeleted || !container[i].deleted) {
+				list.push(container[i]);
+			}
 		}
 		return list;
 	}
