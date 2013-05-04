@@ -6,8 +6,8 @@ html {
 }
 
 #treeWrapper {
-	width: 322px;
-	margin-right: -320px;
+	width: 522px;
+	margin-right: -522px;
 	float:left;
 	height: 600px;
 	overflow-y: scroll;
@@ -15,7 +15,7 @@ html {
 }
 
 #tree {
-	width: 300px;
+	width: 500px;
 	background: #fff;
 	border: 1px solid #eee;
 	padding: 10px;
@@ -23,7 +23,7 @@ html {
 
 #tree .entry {
 	border: 1px solid #ccc;
-	background: #eee;
+	background: #f7f7f7;
 	padding: 3px 5px;
 	line-height: 1em;
 	margin-bottom: 3px;
@@ -35,7 +35,7 @@ html {
 }
 
 #tree .entry:hover {
-	border-color: #000;
+	background-color: #e0e0e0;
 }
 
 #tree .entry.deleted {
@@ -68,7 +68,7 @@ html {
 }
 
 #details {
-	margin-left: 370px;
+	margin-left: 540px;
 	border: 1px solid #eee;
 	padding: 10px;
 }
@@ -77,7 +77,7 @@ html {
 }
 
 #details .entry .key {
-	width: 200px;
+	width: 400px;
 	text-align: right;
 	float:left;
 	margin-top: 5px;
