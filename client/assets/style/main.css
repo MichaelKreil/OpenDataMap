@@ -2,13 +2,20 @@
 	margin: 20px;
 }
 
+#treeWrapper {
+	width: 322px;
+	margin-right: -320px;
+	float:left;
+	height: 600px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
 #tree {
 	width: 300px;
-	margin-right: -320px;
 	background: #fff;
 	border: 1px solid #eee;
 	padding: 10px;
-	float:left;
 }
 
 #tree .entry {
