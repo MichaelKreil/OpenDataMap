@@ -36,6 +36,13 @@ exports.DB = function (config) {
 		});
 	}
 
+	me.has = function (query, collectionName, callback) {
+		var collection = db.collection(options.collectionName);
+		collection.find(query).count(function (err, count) {
+			callback(count > 0);
+		})
+	}
+
 	var getLast = function (collectionName, id, callback) {
 		log.debug('getLast ('+collectionName+': '+id+')');
 		var collection = db.collection(collectionName);
