@@ -7,7 +7,6 @@ exports.Api = function (model) {
 		var source = getSource(path[0]);
 
 		var options = {};
-		var call = source.getAll;
 		var flags = path.splice(1);
 		for (var i = 0; i < flags.length; i++) {
 			var flag = flags[i];
@@ -34,7 +33,7 @@ exports.Api = function (model) {
 			}
 		}
 
-		source.getAll(options, callback);
+		source.get(options, callback);
 	}
 
 	me.set = function (path, data, user, callback) {

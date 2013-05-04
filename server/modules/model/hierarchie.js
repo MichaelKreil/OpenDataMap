@@ -6,8 +6,9 @@ exports.Hierarchie = function (options) {
 	var collectionName = options.name;
 	db.calcNewId(collectionName);
 
-	me.getAll = function (options, callback) {
-		log.debug('getAll');
+	
+	me.get = function (options, callback) {
+		log.debug('get');
 		
 		options.collectionName = collectionName;
 		
