@@ -1,5 +1,8 @@
-.content {
+html {
 	margin: 20px;
+}
+
+.content {
 }
 
 #treeWrapper {

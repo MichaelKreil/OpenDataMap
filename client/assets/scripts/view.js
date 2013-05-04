@@ -32,6 +32,11 @@ var updateTree = function () {
 	output(data, 0, null);
 }
 
+var updateList = function () {
+	var node = $('#tree');
+	node.empty();
+}
+
 var attributeTranslation = {
 	title: {title:'Titel'},
 	parentId: {title:'Unterelement von', type:'parent'}

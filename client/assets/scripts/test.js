@@ -11,8 +11,40 @@ $(function () {
 		});
 	});
 
+	$('#menu').tab();
+
+	$('#menu a').click(function () {
+		$(this).tab('show');
+	});
+
+	$('#btnTopics').click(function () {
+		getTreeData('topics');
+	});
+
+	$('#btnInstitutions').click(function () {
+		getTreeData('institutions');
+	});
+
+	$('#btnRelations').click(function () {
+		getListData('relations');
+	});
+
+	$('#btnTopics').trigger('click');
+});
+
+function getTreeData(newPath) {
+	path = newPath;
 	apiGet(path + '/new/tree', function (newData) {
 		data = newData;
 		updateTree();
 	})
-});
+}
+
+
+function getListData(newPath) {
+	path = newPath;
+	apiGet(path + '/new', function (newData) {
+		data = newData;
+		updateList();
+	})
+}
