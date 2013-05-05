@@ -58,28 +58,37 @@ var showDetails = function (entry, defaultAttributes) {
 	node.empty();
 
 	var attributes = entry.attributes;
+	var returnFunctions = [];
 	for (var key in attributes) {
-		createDetailEntry(key, attributes[key], node, defaultAttributes);
+		returnFunctions.push(createDetailEntry(key, attributes[key], node, defaultAttributes));
 	}
 	
 	for (var i = 0; i < 5; i++) {
-		createDetailEntry('', '', node, defaultAttributes);
+		returnFunctions.push(createDetailEntry('', '', node, defaultAttributes));
 	}
 
 	var saveButton = $('<button class="btn" type="button">Speichern</button>');
 	node.append(saveButton);
 	saveButton.click(function () {
 		var attributes = {};
-		node.find('.entry').each(function (i, node) {
-			var key = $(node).find('.key');
-			if (key.val()) {
-				key = key.val()
-			} else {
-				key = key.attr('name');
+		for (var i = 0; i < returnFunctions.length; i++) {
+			var result = returnFunctions[i]();
+			var key = result.key;
+			var value = result.value;
+			if (defaultAttributes[key]) {
+				if (defaultAttributes[key].multiple) {
+					value = ensureArray(value);
+					if (defaultAttributes[key].isInteger) {
+						for (var j = 0; j < value.length; j++) value[j] = ensureInteger(value[j]);
+					}
+				} else {
+					if (defaultAttributes[key].isInteger) {
+						value = ensureInteger(value);
+					}
+				}
 			}
-			var value = $(node).find('.value').val();
 			if (key != '') attributes[key] = value;
-		});
+		};
 		entry.attributes = attributes;
 		updateTree();
 		node.empty();
@@ -110,51 +119,93 @@ var relationAttributes = {
 	institutions: {title:'Institution', type:'lookup-institutions', multiple:true}
 };
 
-var createDetailEntry = function (name, value, node, attributes) {
-	var label;
-	if (attributes[name] !== undefined) {
-		label = $('<label class="key" name="'+name+'">'+attributes[name].title+'</label>');
+var createDetailEntry = function (key, value, node, attributes) {
+	var input, label, returnFunction;
+	if (attributes[key]) {
+		label = $('<label class="key" name="'+key+'">'+attributes[key].title+'</label>');
+		if (attributes[key].type) {
+			switch (attributes[key].type) {
+				case 'lookup-topics': input = getSelectionBox(topics, value, attributes[key].multiple); break;
+				case 'lookup-institutions': input = getSelectionBox(institutions, value, attributes[key].multiple); break;
+			}
+			var getValue = input.getValue;
+			returnFunction = function () {
+				return {	key: key, value: getValue() };
+			}
+			input = input.node;
+		} else {
+			input = $('<input class="value" type="text" value="'+value+'">');
+			returnFunction = function () {
+				return {	key: key, value: input.val() };
+			}
+		}
 	} else {
-		label = $('<input class="key" name="'+name+'" type="text" value="'+name+'">');
-	}
-	var input = '<input class="value" type="text" value="'+value+'">';
-	if (attributes[name] && attributes[name].type) {
-		switch (attributes[name].type) {
-			case 'lookup-topics':
-				input = getComboBox(topics, value, attributes[name].multiple);
-			break;
-			case 'lookup-institutions':
-				input = getComboBox(institutions, value, attributes[name].multiple);
-			break;
+		label = $('<input class="key" name="'+key+'" type="text" value="'+key+'">');
+		input = $('<input class="value" type="text" id="'+(''+Math.random()).substr(2)+'" value="'+value+'">');
+		returnFunction = function () {
+			return {	key: label.val(), value: input.val() };
 		}
 	}
 
 	var subnode = $('<div class="entry"></div>');
 	node.append(subnode);
 	subnode.append(label);
-	subnode.append($(input));
+	subnode.append(input);
+
+	return returnFunction;
 }
 
-var getComboBox = function (data, values, multiple) {
-	var selection = [];
+var getSelectionBox = function (data, values, multiple) {
 	if (multiple) {
+		var selection = [];
 		for (var i = 0; i < values.length; i++) selection[values[i]] = true;
-	} else {
-		selection[values] = true;
-	}
-
-	var input = '<option value=""></option>';
-	var rec = function (list, indent) {
-		for (var i = 0; i < list.length; i++) {
-			var entry = list[i];
-			var title = new Array(indent + 1).join('&nbsp;-&nbsp;') + entry.attributes.title;
-			var selected = selection[entry.id] ? 'selected="selected"' : '';
-			input += '<option value="'+entry.id+'" '+selected+'>'+title+'</option>';
-			if (entry.children) rec(entry.children, indent+1);
+		var checkboxes = '';
+		var random = 'a'+(''+Math.random()).substr(2)+'b';
+		var ids = [];
+		var rec = function (list, indent) {
+			for (var i = 0; i < list.length; i++) {
+				var entry = list[i];
+				var title = entry.attributes.title;
+				var selected = selection[entry.id] ? 'checked="checked"' : '';
+				var id = random+entry.id;
+				ids.push(id);
+				checkboxes += '<label for="'+id+'"><input type="checkbox" id="'+id+'" value="'+entry.id+'" '+selected+' style="margin-left:'+(indent*10)+'px">'+title+'</label>';
+				if (entry.children) rec(entry.children, indent+1);
+			}
 		}
+		rec(data, 0);
+		var node = $('<div class="checkboxWrapper value">'+checkboxes+'</div>');
+		return {
+			node: node,
+			getValue:function () {
+				var values = [];
+				for (var i = 0; i < ids.length; i++) {
+					var entryId = parseInt(ids[i].split('b').pop(), 10);
+					if ($('#'+ids[i]).prop('checked')) values.push(entryId);
+				}
+				return values;
+			}
+		};
+	} else {
+		var options = '';
+		var rec = function (list, indent) {
+			for (var i = 0; i < list.length; i++) {
+				var entry = list[i];
+				var title = new Array(indent + 1).join('&nbsp;-&nbsp;') + entry.attributes.title;
+				var selected = (entry.id == values) ? 'selected="selected"' : '';
+				options += '<option value="'+entry.id+'" '+selected+'>'+title+'</option>';
+				if (entry.children) rec(entry.children, indent+1);
+			}
+		}
+		rec(data, 0);
+		var node = $('<select class="value">'+options+'</select>');
+		return {
+			node: node,
+			getValue:function () {
+				return parseInt(node.val(), 10);
+			}
+		};
 	}
-	rec(data, 0);
-	return '<select class="value" '+(multiple ? ' multiple="multiple" size="8"' : '')+'>'+input+'</select>';
 }
 
 var addChild = function (list, parentId) {
