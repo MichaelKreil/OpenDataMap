@@ -66,31 +66,42 @@ exports.DB = function (config) {
 		log.debug('set ('+options.collectionName+')');
 		var collection = db.collection(options.collectionName);
 
+		var stack = entries.length;
 		entries.forEach(function (entry) {
-
-			var newEntry = {
-				attributes: entry.attributes,
-				time: (new Date()).getTime(),
-				state: 'new',
-				deleted: false,
-				user: options.user,
-				id: entry.id
-			};
-			if (entry.deleted) newEntry.deleted = true;
-
-			if (newEntry.id === undefined) newEntry.id = me.getNewId(options.collectionName)
-			if (entry._id) newEntry.previous_id = entry._id;
-
-			getLast(options.collectionName, newEntry.id, function (doc) {
-				if (!sameObject(doc, newEntry)) {
-					collection.insert(newEntry, function (err, inserted) {
-						log.log('new entry: '+JSON.stringify(newEntry));
-						if (err) log.error(err);
-					});
-				}
-			})
+			me.setOne(entry, options, function () {
+				stack--;
+				if (stack == 0) callback(true);
+			});
 		});
-		callback(true);
+	}
+
+	me.setOne = function (entry, options, callback) {
+		log.debug('setOne ('+options.collectionName+')');
+		var collection = db.collection(options.collectionName);
+		console.log(entry);
+
+		var newEntry = {
+			attributes: entry.attributes,
+			time: (new Date()).getTime(),
+			state: 'new',
+			deleted: false,
+			user: options.user,
+			id: entry.id
+		};
+		if (entry.deleted) newEntry.deleted = true;
+
+		if (newEntry.id === undefined) newEntry.id = me.getNewId(options.collectionName)
+		if (entry._id) newEntry.previous_id = entry._id;
+
+		getLast(options.collectionName, newEntry.id, function (doc) {
+			if (!sameObject(doc, newEntry)) {
+				collection.insert(newEntry, function (err, inserted) {
+					log.log('new entry: '+JSON.stringify(newEntry));
+					if (err) log.error(err);
+					callback(true);
+				});
+			}
+		})
 	}
 
 	var condense = function(data, options) {
