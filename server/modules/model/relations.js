@@ -71,11 +71,13 @@ function validateIntArray(values, db, callback) {
 	}
 	if (newValues.length == 0) newValues = [0];
 	return newValues;
-}
 
-function checkInt(value) {
-	if (isFinite(value)) return value;
-	if (Object.prototype.toString.call(value) == '[Object String]') value = parseInt(value, 10);
-	if (isFinite(value)) return value;
-	return undefined;
+	var checkInt = function(value) {
+		if (isFinite(value)) return value;
+		if (Object.prototype.toString.call(value) == '[object String]') value = parseInt(value, 10);
+		if (isFinite(value)) return value;
+		return undefined;
+	}
+	
+	return me;
 }
