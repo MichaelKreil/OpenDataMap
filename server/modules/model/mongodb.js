@@ -37,7 +37,8 @@ exports.DB = function (config) {
 	}
 
 	me.has = function (query, collectionName, callback) {
-		var collection = db.collection(options.collectionName);
+		log.debug('has ('+collectionName+': '+JSON.stringify(query)+')');
+		var collection = db.collection(collectionName);
 		collection.find(query).count(function (err, count) {
 			callback(count > 0);
 		})
