@@ -47,15 +47,19 @@ exports.DB = function (config) {
 		log.debug('getLast ('+collectionName+': '+id+')');
 		var collection = db.collection(collectionName);
 		var alreadyFound = false;
-		collection.find({id:id}).sort({time:-1}).limit(1).forEach(function (err, doc) {
-			if (err) log.error(err);
-			if (doc) {
-				alreadyFound = true;
-				callback(doc);
-			} else {
-				if (!alreadyFound) callback(false);
-			}
-		});
+		if ((!id) && (id != 0)) {
+			callback(false);
+		} else {
+			collection.find({id:id}).sort({time:-1}).limit(1).forEach(function (err, doc) {
+				if (err) log.error(err);
+				if (doc) {
+					alreadyFound = true;
+					callback(doc);
+				} else {
+					if (!alreadyFound) callback(false);
+				}
+			});
+		}
 	}
 
 	me.set = function (entries, options, callback) {
