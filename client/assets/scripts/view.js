@@ -2,6 +2,7 @@ var updateTree = function () {
 	var node = $('#tree');
 	node.empty();
 	$('#details').empty();
+	var treeAttributes = (path == 'topics') ? topicAttributes : institutionAttributes;
 
 	var output = function (list, indent, parentId) {
 		var margin = indent*16;
@@ -46,24 +47,24 @@ var updateList = function () {
 		var title = entry.attributes.title;
 		var subnode = $('<div class="'+classes.join(' ')+'" style="float:none">'+title+'</div>');
 		subnode.click(function () {
-			showDetails(entry, listAttributes);
+			showDetails(entry, relationAttributes);
 		})
 		node.append(subnode);
 
 	})
 }
 
-var showDetails = function (entry, attributes) {
+var showDetails = function (entry, defaultAttributes) {
 	var node = $('#details');
 	node.empty();
 
 	var attributes = entry.attributes;
 	for (var key in attributes) {
-		createDetailEntry(key, attributes[key], node, attributes);
+		createDetailEntry(key, attributes[key], node, defaultAttributes);
 	}
 	
 	for (var i = 0; i < 5; i++) {
-		createDetailEntry('', '', node, attributes);
+		createDetailEntry('', '', node, defaultAttributes);
 	}
 
 	var saveButton = $('<button class="btn" type="button">Speichern</button>');
@@ -94,15 +95,20 @@ var showDetails = function (entry, attributes) {
 	});
 };
 
-var treeAttributes = {
+var topicAttributes = {
 	title: {title:'Titel'},
-	parentId: {title:'Unterelement von', type:'parent'}
+	parentId: {title:'Unterelement von', type:'lookup-topics', multiple:false}
 };
 
-var listAttributes = {
+var institutionAttributes = {
 	title: {title:'Titel'},
-	topics: {title:'Themen', type:'lookup'},
-	institutions: {title:'Themen', type:'lookup'}
+	parentId: {title:'Unterelement von', type:'lookup-institutions', multiple:false}
+};
+
+var relationAttributes = {
+	title: {title:'Titel'},
+	topics: {title:'Themen', type:'lookup-topics', multiple:true},
+	institutions: {title:'Institution', type:'lookup-institutions', multiple:true}
 };
 
 var createDetailEntry = function (name, value, node, attributes) {
@@ -115,19 +121,11 @@ var createDetailEntry = function (name, value, node, attributes) {
 	var input = '<input class="value" type="text" value="'+value+'">';
 	if (attributes[name] && attributes[name].type) {
 		switch (attributes[name].type) {
-			case 'parent':
-				input = '<option value=""></option>';
-				var rec = function (list, indent) {
-					for (var i = 0; i < list.length; i++) {
-						var entry = list[i];
-						var title = new Array(indent + 1).join('&nbsp;-&nbsp;') + entry.attributes.title;
-						var selected = (entry.id == value) ? 'selected="selected"' : '';
-						input += '<option value="'+entry.id+'" '+selected+'>'+title+'</option>';
-						if (entry.children) rec(entry.children, indent+1);
-					}
-				}
-				rec(data, 0);
-				input = '<select class="value" value="'+value+'">'+input+'</select>';
+			case 'lookup-topics':
+				input = getComboBox(topics, value, attributes[name].multiple);
+			break;
+			case 'lookup-institutions':
+				input = getComboBox(institutions, value, attributes[name].multiple);
 			break;
 		}
 	}
@@ -136,6 +134,28 @@ var createDetailEntry = function (name, value, node, attributes) {
 	node.append(subnode);
 	subnode.append(label);
 	subnode.append($(input));
+}
+
+var getComboBox = function (data, values, multiple) {
+	var selection = [];
+	if (multiple) {
+		for (var i = 0; i < values.length; i++) selection[values[i]] = true;
+	} else {
+		selection[values] = true;
+	}
+
+	var input = '<option value=""></option>';
+	var rec = function (list, indent) {
+		for (var i = 0; i < list.length; i++) {
+			var entry = list[i];
+			var title = new Array(indent + 1).join('&nbsp;-&nbsp;') + entry.attributes.title;
+			var selected = selection[entry.id] ? 'selected="selected"' : '';
+			input += '<option value="'+entry.id+'" '+selected+'>'+title+'</option>';
+			if (entry.children) rec(entry.children, indent+1);
+		}
+	}
+	rec(data, 0);
+	return '<select class="value" '+(multiple ? ' multiple="multiple" size="8"' : '')+'>'+input+'</select>';
 }
 
 var addChild = function (list, parentId) {
