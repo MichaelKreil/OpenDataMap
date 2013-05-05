@@ -105,3 +105,21 @@ html {
 	color: #0A0;
 	vertical-align: middle;
 }
+
+.checkboxWrapper {
+	max-height: 200px;
+	overflow: scroll;
+	border: 1px solid #eee;
+	margin-bottom: 10px;
+	padding: 5px;
+}
+
+.checkboxWrapper label {
+	line-height: 100%;
+	margin: 0px 0px 2px 0px;
+}
+
+.checkboxWrapper input {
+	margin-top: 0px !important;
+	margin-right: 5px !important;
+}
