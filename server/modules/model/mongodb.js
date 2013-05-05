@@ -99,6 +99,8 @@ exports.DB = function (config) {
 					if (err) log.error(err);
 					callback(true);
 				});
+			} else {
+				callback(true);
 			}
 		})
 	}

@@ -22,8 +22,6 @@ exports.Server = function (config, model) {
 
 				log.debug('api POST request');
 
-				console.log(req.connection.remoteAddress);
-
 				var body = '';
 				req.on('data', function (data) { body += data;	});
 				req.on('end', function () {
