@@ -105,18 +105,18 @@ var showDetails = function (entry, defaultAttributes) {
 
 var topicAttributes = {
 	title: {title:'Titel'},
-	parentId: {title:'Unterelement von', type:'lookup-topics', multiple:false}
+	parentId: {title:'Unterelement von', type:'lookup-topics', multiple:false, isInteger: true}
 };
 
 var institutionAttributes = {
 	title: {title:'Titel'},
-	parentId: {title:'Unterelement von', type:'lookup-institutions', multiple:false}
+	parentId: {title:'Unterelement von', type:'lookup-institutions', multiple:false, isInteger: true}
 };
 
 var relationAttributes = {
 	title: {title:'Titel'},
-	topics: {title:'Themen', type:'lookup-topics', multiple:true},
-	institutions: {title:'Institution', type:'lookup-institutions', multiple:true}
+	topics: {title:'Themen', type:'lookup-topics', multiple:true, isInteger: true},
+	institutions: {title:'Institution', type:'lookup-institutions', multiple:true, isInteger: true}
 };
 
 var createDetailEntry = function (key, value, node, attributes) {
@@ -213,6 +213,24 @@ var addChild = function (list, parentId) {
 	list.push(entry);
 	return entry;
 }
+
+var ensureArray = function (values) {
+	if (Object.prototype.toString.call(values) == '[object Array]') return values;
+	if (Object.prototype.toString.call(values) == '[object String]') values = JSON.parse(values);
+	if (Object.prototype.toString.call(values) == '[object Array]') return values;
+	console.error('ensureArray versagt an "'+values+'"');
+	return undefined;
+}
+
+
+var ensureInteger = function (value) {
+	if (isFinite(value)) return value;
+	if (Object.prototype.toString.call(value) == '[object String]') value = parseInt(value, 10);
+	if (isFinite(value)) return value;
+	console.error('ensureInteger versagt an "'+value+'"');
+	return undefined;
+}
+
 
 
 
