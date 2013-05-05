@@ -7,7 +7,6 @@ var path, data;
 $(function () {
 	$('#save').click(function () {
 		apiPost(path, data, function () {
-			console.log(data);
 			$('#savecheckmark').show().delay(1000).fadeOut(500);
 		});
 	});
