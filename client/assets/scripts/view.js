@@ -2,14 +2,14 @@ var updateTree = function () {
 	var node = $('#tree');
 	node.empty();
 	$('#details').empty();
-	var treeAttributes = (path == 'topics') ? topicAttributes : institutionAttributes;
+	var defaultAttributes = (path == 'topics') ? topicAttributes : institutionAttributes;
 
 	var output = function (list, indent, parentId) {
 		var margin = indent*16;
 		
 		var subnode = $('<div class="addnew">+</div>');
 		subnode.click(function () {
-			showDetails(addChild(list, parentId), treeAttributes);
+			showDetails(addChild(list, parentId), defaultAttributes);
 		})
 		node.append(subnode);
 		node.append('<br style="clear:both;" />');
@@ -22,7 +22,7 @@ var updateTree = function () {
 
 				var subnode = $('<div class="'+classes.join(' ')+'" style="margin-left:'+margin+'px;width:'+(470-margin)+'px">'+entry.attributes.title+'</div>');
 				subnode.click(function () {
-					showDetails(entry, treeAttributes);
+					showDetails(entry, defaultAttributes);
 				})
 				node.append(subnode);
 
@@ -50,7 +50,6 @@ var updateList = function () {
 			showDetails(entry, relationAttributes);
 		})
 		node.append(subnode);
-
 	})
 }
 
