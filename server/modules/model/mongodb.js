@@ -144,12 +144,12 @@ exports.DB = function (config) {
 		if (!obj1.attributes && obj2.attributes) return false;
 		if (obj1.attributes && !obj2.attributes) return false;
 
-		var same = true;
 		var attr1 = obj1.attributes;
 		var attr2 = obj2.attributes;
-		if (!compareObjects(attr1, attr2)) same = false;
-		if (obj1.deleted !== obj2.deleted) same = false;
-		return same;
+		if (!compareObjects(attr1, attr2)) return false;
+		if (obj1.deleted !== obj2.deleted) return false;
+
+		return true;
 	}
 
 	var compareObjects = function (obj1, obj2) {
