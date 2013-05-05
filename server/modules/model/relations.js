@@ -35,12 +35,17 @@ exports.Relations = function (options) {
 	}
 
 	var sort = function (list) {
+		list.forEach(function (entry) {
+			for (var key in relations) if (relations.hasOwnProperty(key)) {
+				entry.attributes[key].sort();
+			}
+		})
 		return list;
 	}
 
 	me.set = function (entries, options, callback) {
 		log.debug('set');
-
+		entries = sort(entries);
 		var entryCount = entries.length;
 		entries.forEach(function (entry) {
 			me.setOne(entry, options, function (result) {
