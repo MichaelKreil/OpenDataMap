@@ -111,19 +111,33 @@ var showDetails = function (entry, defaultAttributes) {
 };
 
 var topicAttributes = {
-	title: {title:'Titel'},
-	parentId: {title:'Unterelement von', type:'lookup-topics', multiple:false, isInteger: true}
+	title: {title:'Titel', defaultValue:'Neues Thema'},
+	parentId: {title:'Unterelement von', defaultValue:0, type:'lookup-topics', multiple:false, isInteger: true}
 };
 
 var institutionAttributes = {
-	title: {title:'Titel'},
-	parentId: {title:'Unterelement von', type:'lookup-institutions', multiple:false, isInteger: true}
+	title: {title:'Titel', defaultValue:'Neue Institution'},
+	parentId: {title:'Unterelement von', defaultValue:0, type:'lookup-institutions', multiple:false, isInteger: true}
 };
 
 var relationAttributes = {
-	title: {title:'Titel'},
-	topics: {title:'Themen', type:'lookup-topics', multiple:true, isInteger: true},
-	institutions: {title:'Institution', type:'lookup-institutions', multiple:true, isInteger: true}
+	title: {title:'Titel', defaultValue:'Neue Beziehung'},
+	topics: {title:'Themen', defaultValue:[0], type:'lookup-topics', multiple:true, isInteger: true},
+	institutions: {title:'Institution', defaultValue:[0], type:'lookup-institutions', multiple:true, isInteger: true},
+	type: {
+		title: 'Typ',
+		type: 'lookup-simple',
+		values: {
+			'':'',
+			'comment': 'Kommentar',
+			'supportedBy': 'Unterstützung',
+			'interest': 'Interesse',
+			'dataOfficial': 'offizielle Daten',
+			'dataInofficial': 'inoffizielle Daten',
+			'institutionContacted': 'Kontakt aufgenommen',
+			'institutionDeclined': 'Kommentar'
+		}
+	}
 };
 
 var createDetailEntry = function (key, value, node, attributes) {
