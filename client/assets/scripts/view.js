@@ -39,6 +39,13 @@ var updateList = function () {
 	node.empty();
 	$('#details').empty();
 
+	var subnode = $('<div class="addnew">+</div>');
+	node.append(subnode);
+	node.append('<br style="clear:both;" />');
+	subnode.click(function () {
+		showDetails(addEntry(data, relationAttributes), relationAttributes);
+	})
+
 	$(data).each(function (i, entry) {
 		var classes = ['entry'];
 		if (entry.deleted) classes.push('deleted');
