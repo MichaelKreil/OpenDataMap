@@ -9,7 +9,7 @@ var updateTree = function () {
 		
 		var subnode = $('<div class="addnew">+</div>');
 		subnode.click(function () {
-			showDetails(addChild(list, parentId), defaultAttributes);
+			showDetails(addEntry(list, defaultAttributes, {parentId:parentId}), defaultAttributes);
 		})
 		node.append(subnode);
 		node.append('<br style="clear:both;" />');
@@ -208,8 +208,12 @@ var getSelectionBox = function (data, values, multiple) {
 	}
 }
 
-var addChild = function (list, parentId) {
-	var entry = {attributes:{title:'Neuer Eintrag', parentId:parentId}, children:[], state:"new", deleted:"false"};
+var addEntry = function (list, defaultAttributes, additionalAttributes) {
+	var entry = {attributes:{}, children:[], state:"new", deleted:"false"};
+	for (var key in defaultAttributes) if (defaultAttributes.hasOwnProperty(key)) {
+		if (defaultAttributes[key].defaultValue) entry.attributes[key] = defaultAttributes[key].defaultValue;
+	}
+	if (additionalAttributes) $.extend(entry.attributes, additionalAttributes);
 	list.push(entry);
 	return entry;
 }
