@@ -134,6 +134,7 @@ var createDetailEntry = function (key, value, node, attributes) {
 			switch (attributes[key].type) {
 				case 'lookup-topics': input = getSelectionBox(topics, value, attributes[key].multiple); break;
 				case 'lookup-institutions': input = getSelectionBox(institutions, value, attributes[key].multiple); break;
+				case 'lookup-simple': input = getSimpleSelectionBox(attributes[key].values, value); break;
 			}
 			var getValue = input.getValue;
 			returnFunction = function () {
@@ -160,6 +161,22 @@ var createDetailEntry = function (key, value, node, attributes) {
 	subnode.append(input);
 
 	return returnFunction;
+}
+
+var getSimpleSelectionBox = function (data, value, multiple) {
+	console.log(value);
+	var options = '';
+	for (var key in data) if (data.hasOwnProperty(key)) {
+		var selected = (value == key) ? ' selected="selected"' : '';
+		options += '<option value="'+key+'" '+selected+'>'+data[key]+'</option>';	
+	}
+	var node = $('<select class="value">'+options+'</select>');
+	return {
+		node: node,
+		getValue:function () {
+			return parseInt(node.val(), 10);
+		}
+	};
 }
 
 var getSelectionBox = function (data, values, multiple) {
