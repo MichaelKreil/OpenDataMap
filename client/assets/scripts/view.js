@@ -247,7 +247,7 @@ var getSelectionBox = function (data, values, multiple) {
 }
 
 var addEntry = function (list, defaultAttributes, additionalAttributes) {
-	var entry = {attributes:{}, children:[], state:"new", deleted:"false"};
+	var entry = {attributes:{}, children:[], state:"new", deleted:false};
 	for (var key in defaultAttributes) if (defaultAttributes.hasOwnProperty(key)) {
 		if (defaultAttributes[key].defaultValue) entry.attributes[key] = defaultAttributes[key].defaultValue;
 	}
