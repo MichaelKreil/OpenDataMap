@@ -185,6 +185,12 @@ exports.DB = function (config) {
 			case '[object Number]':
 				return val1 == val2
 			break;
+			case '[object Undefined]':
+				return (val2 === undefined);
+			break;
+			case '[object Null]':
+				return (val2 == null);
+			break;
 			default:
 				log.error('Unknown data type "'+datatype+'"');
 				return val1 == val2
